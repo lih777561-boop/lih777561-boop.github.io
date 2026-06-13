@@ -3,280 +3,441 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>大疆TK直播网络 — 天空视角·实时直播</title>
+  <title>大疆TK直播网络 — 天空视角 · 实时直播</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
-      background: #0a0e17;
-      color: #e0e6f0;
-      line-height: 1.6;
+      background: #060a12;
+      color: #d4dce8;
+      line-height: 1.7;
       overflow-x: hidden;
     }
     a { color: #4dc9f6; text-decoration: none; }
 
+    /* ========== NAV ========== */
     nav {
-      position: fixed; top:0; left:0; right:0; z-index:999;
-      background: rgba(10,14,23,0.92);
-      backdrop-filter: blur(20px);
-      padding: 18px 40px;
+      position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+      background: rgba(6,10,18,0.88);
+      backdrop-filter: blur(24px);
+      padding: 18px 48px;
       display: flex; align-items: center; justify-content: space-between;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
     }
     .logo {
       font-size: 22px; font-weight: 800;
-      background: linear-gradient(135deg, #4dc9f6, #00b4d8);
+      background: linear-gradient(135deg, #4dc9f6, #00e5ff);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       letter-spacing: 2px;
     }
-    .nav-links { display: flex; gap: 32px; list-style: none; }
-    .nav-links a { color: #8892b0; transition: color .3s; font-size: 15px; }
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links a { color: #8892b0; font-size: 15px; transition: color .3s; }
     .nav-links a:hover { color: #4dc9f6; }
 
+    /* ========== HERO ========== */
     .hero {
-      min-height: 100vh;
+      min-height: 95vh;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       text-align: center;
-      padding: 120px 20px 80px;
+      padding: 140px 24px 80px;
       position: relative;
-      background: radial-gradient(ellipse at 50% 0%, rgba(77,201,246,0.08) 0%, transparent 70%);
+      background: radial-gradient(ellipse at 50% 0%, rgba(77,201,246,0.07) 0%, transparent 65%);
     }
-    .hero::before {
-      content: ''; position: absolute; top:30%; left:50%; transform: translate(-50%,-50%);
-      width: 600px; height: 600px;
-      background: radial-gradient(circle, rgba(77,201,246,0.06) 0%, transparent 70%);
+    .hero::after {
+      content: '';
+      position: absolute; top: 20%; left: 50%; transform: translate(-50%, -50%);
+      width: 800px; height: 800px;
+      background: radial-gradient(circle, rgba(0,229,255,0.04) 0%, transparent 70%);
       border-radius: 50%; pointer-events: none;
     }
-    .hero-badge {
-      display: inline-block; padding: 8px 24px;
-      border: 1px solid rgba(77,201,246,0.3);
-      border-radius: 50px;
-      color: #4dc9f6; font-size: 14px; letter-spacing: 3px;
-      margin-bottom: 32px; animation: fadeInUp .6s ease;
-    }
-    .hero h1 {
-      font-size: clamp(36px, 6vw, 64px); font-weight: 800;
-      line-height: 1.2; margin-bottom: 20px;
-      background: linear-gradient(135deg, #e0e6f0 20%, #4dc9f6 80%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    }
-    .hero p {
-      font-size: 18px; color: #8892b0; max-width: 540px; margin-bottom: 40px;
-    }
-    .btn-group { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
-    .btn {
-      padding: 14px 36px; border-radius: 8px; font-size: 16px; font-weight: 600;
-      cursor: pointer; transition: all .3s; border: none; display: inline-block;
-    }
-    .btn-primary {
-      background: linear-gradient(135deg, #4dc9f6, #0077b6);
-      color: #fff; box-shadow: 0 4px 24px rgba(77,201,246,0.25);
-    }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(77,201,246,0.4); }
-    .btn-outline {
-      background: transparent; color: #4dc9f6;
-      border: 1.5px solid rgba(77,201,246,0.4);
-    }
-    .btn-outline:hover { border-color: #4dc9f6; background: rgba(77,201,246,0.06); }
-
-    .live-pulse {
+    .hero-tag {
       display: inline-flex; align-items: center; gap: 8px;
-      padding: 8px 20px; background: rgba(255,59,48,0.1);
-      border: 1px solid rgba(255,59,48,0.3); border-radius: 50px;
+      padding: 6px 18px;
+      background: rgba(77,201,246,0.08);
+      border: 1px solid rgba(77,201,246,0.25);
+      border-radius: 50px;
+      color: #4dc9f6; font-size: 13px; font-weight: 600; letter-spacing: 2px;
       margin-bottom: 28px;
     }
-    .live-dot {
-      width: 10px; height: 10px; background: #ff3b30; border-radius: 50%;
-      animation: pulse 1.5s infinite;
+    .hero-tag .dot {
+      width: 8px; height: 8px;
+      background: #00e5ff; border-radius: 50%;
+      box-shadow: 0 0 12px rgba(0,229,255,0.6);
+      animation: pulse-dot 2s infinite;
     }
-    @keyframes pulse {
-      0%,100% { opacity:1; box-shadow: 0 0 0 0 rgba(255,59,48,0.6); }
-      50% { opacity:0.8; box-shadow: 0 0 0 10px rgba(255,59,48,0); }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
     }
-    .live-text { color: #ff3b30; font-weight: 700; font-size: 14px; letter-spacing: 1px; }
+    .hero h1 {
+      font-size: clamp(34px, 5vw, 58px); font-weight: 800;
+      line-height: 1.25; margin-bottom: 18px;
+      background: linear-gradient(135deg, #e8edf4 20%, #4dc9f6 80%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      letter-spacing: 1px;
+    }
+    .hero .sub {
+      font-size: 17px; color: #7a86a0; max-width: 520px;
+      margin-bottom: 44px; line-height: 1.8;
+    }
 
-    .section {
-      padding: 100px 40px; max-width: 1200px; margin: 0 auto;
+    /* ========== STATS BAR ========== */
+    .stats-bar {
+      display: flex; gap: 48px; justify-content: center; flex-wrap: wrap;
+      padding: 48px 24px;
+      background: rgba(255,255,255,0.015);
+      border-top: 1px solid rgba(255,255,255,0.04);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      backdrop-filter: blur(12px);
+    }
+    .stat-item { text-align: center; min-width: 140px; }
+    .stat-number {
+      font-size: 38px; font-weight: 800;
+      background: linear-gradient(135deg, #4dc9f6, #00b4d8);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      line-height: 1.2;
+    }
+    .stat-label { font-size: 13px; color: #5a6680; margin-top: 6px; letter-spacing: 1px; }
+
+    /* ========== SECTIONS ========== */
+    .section { padding: 90px 32px; max-width: 1140px; margin: 0 auto; }
+    .section-label {
+      text-align: center; font-size: 13px; color: #4dc9f6;
+      letter-spacing: 3px; text-transform: uppercase; margin-bottom: 12px;
+      font-weight: 600;
     }
     .section-title {
-      text-align: center; font-size: 36px; font-weight: 700; margin-bottom: 16px;
+      text-align: center; font-size: 32px; font-weight: 700; margin-bottom: 14px;
+      letter-spacing: 1px;
     }
     .section-sub {
-      text-align: center; color: #8892b0; margin-bottom: 60px; font-size: 16px;
+      text-align: center; color: #6b7a96; margin-bottom: 56px; font-size: 15px;
+      max-width: 500px; margin-left: auto; margin-right: auto; line-height: 1.8;
     }
+
+    /* ========== FEATURE CARDS ========== */
     .features-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 28px;
     }
     .feature-card {
-      background: rgba(255,255,255,0.03);
+      background: linear-gradient(160deg, rgba(255,255,255,0.025) 0%, rgba(255,255,255,0.01) 100%);
       border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 16px; padding: 36px 28px;
-      transition: all .3s;
+      border-radius: 18px; padding: 40px 30px 34px;
+      transition: all .35s;
+      position: relative; overflow: hidden;
     }
+    .feature-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(77,201,246,0.4), transparent);
+      opacity: 0; transition: opacity .35s;
+    }
+    .feature-card:hover::before { opacity: 1; }
     .feature-card:hover {
-      border-color: rgba(77,201,246,0.3);
-      transform: translateY(-4px);
-      box-shadow: 0 12px 40px rgba(77,201,246,0.08);
+      border-color: rgba(77,201,246,0.25);
+      transform: translateY(-6px);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.3);
     }
-    .feature-icon { font-size: 40px; margin-bottom: 20px; }
-    .feature-card h3 { font-size: 20px; margin-bottom: 10px; }
-    .feature-card p { color: #8892b0; font-size: 14px; line-height: 1.7; }
-
-    .streams-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 24px;
-    }
-    .stream-card {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 16px; overflow: hidden;
-      transition: all .3s;
-    }
-    .stream-card:hover { border-color: rgba(77,201,246,0.25); }
-    .stream-thumb {
-      height: 200px; background: linear-gradient(135deg, #1a1f2e, #0d1b2a);
+    .feature-icon {
+      width: 52px; height: 52px;
+      background: rgba(77,201,246,0.08);
+      border-radius: 14px;
       display: flex; align-items: center; justify-content: center;
+      font-size: 24px; margin-bottom: 22px;
+    }
+    .feature-card h3 { font-size: 18px; margin-bottom: 10px; letter-spacing: 0.5px; }
+    .feature-card p { color: #6b7a96; font-size: 14px; line-height: 1.75; }
+
+    /* ========== SCENE CARDS ========== */
+    .scenes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 28px;
+    }
+    .scene-card {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 18px; padding: 36px 28px;
+      text-align: center;
+      transition: all .35s;
+    }
+    .scene-card:hover {
+      border-color: rgba(77,201,246,0.2);
+      background: rgba(77,201,246,0.03);
+    }
+    .scene-icon { font-size: 44px; margin-bottom: 16px; }
+    .scene-card h4 { font-size: 17px; margin-bottom: 8px; }
+    .scene-card p { color: #6b7a96; font-size: 13px; line-height: 1.7; max-width: 260px; margin: 0 auto; }
+
+    /* ========== PRICING ========== */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 28px;
+      align-items: stretch;
+    }
+    .price-card {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 18px; padding: 38px 28px;
+      display: flex; flex-direction: column;
+      transition: all .35s;
       position: relative;
     }
-    .stream-thumb .play-icon {
-      width: 56px; height: 56px; background: rgba(77,201,246,0.3);
-      border-radius: 50%; display: flex; align-items: center; justify-content: center;
-      font-size: 24px;
+    .price-card:hover {
+      border-color: rgba(77,201,246,0.25);
+      transform: translateY(-4px);
     }
-    .stream-card .live-tag {
-      position: absolute; top:12px; left:12px;
-      background: #ff3b30; color:#fff; padding:3px 10px;
-      border-radius: 4px; font-size:12px; font-weight:700;
+    .price-card.popular {
+      border-color: rgba(77,201,246,0.35);
+      background: linear-gradient(180deg, rgba(77,201,246,0.05) 0%, rgba(77,201,246,0.01) 100%);
     }
-    .stream-info { padding: 20px; }
-    .stream-info h4 { margin-bottom: 6px; }
-    .stream-info span { color: #8892b0; font-size: 13px; }
+    .popular-tag {
+      position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
+      background: linear-gradient(135deg, #4dc9f6, #0077b6);
+      color: #fff; font-size: 12px; font-weight: 700;
+      padding: 4px 16px; border-radius: 50px;
+      white-space: nowrap; letter-spacing: 1px;
+    }
+    .price-header { text-align: center; margin-bottom: 28px; }
+    .price-header .name { font-size: 17px; font-weight: 700; margin-bottom: 12px; }
+    .price-header .amount {
+      font-size: 42px; font-weight: 800;
+      background: linear-gradient(135deg, #4dc9f6, #00e5ff);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .price-header .amount small { font-size: 16px; opacity: 0.7; }
+    .price-header .desc { color: #5a6680; font-size: 13px; margin-top: 6px; }
+    .price-features { list-style: none; flex: 1; margin-bottom: 28px; }
+    .price-features li {
+      padding: 8px 0; font-size: 14px; color: #8892b0;
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+    }
+    .price-features li::before { content: '✓ '; color: #4dc9f6; margin-right: 6px; font-weight: 700; }
+    .btn {
+      display: inline-block; width: 100%;
+      padding: 13px; border-radius: 10px;
+      font-size: 15px; font-weight: 600; cursor: pointer;
+      transition: all .3s; text-align: center;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #4dc9f6, #0077b6);
+      color: #fff; border: none;
+      box-shadow: 0 4px 20px rgba(77,201,246,0.2);
+    }
+    .btn-primary:hover { box-shadow: 0 6px 30px rgba(77,201,246,0.35); transform: translateY(-2px); }
+    .btn-outline {
+      background: transparent; color: #4dc9f6;
+      border: 1.5px solid rgba(77,201,246,0.3);
+    }
+    .btn-outline:hover { border-color: #4dc9f6; background: rgba(77,201,246,0.05); }
 
+    /* ========== CTA ========== */
     .cta {
-      text-align: center; padding: 100px 40px;
-      background: radial-gradient(ellipse at 50% 100%, rgba(77,201,246,0.06) 0%, transparent 70%);
+      text-align: center; padding: 90px 32px;
+      background: radial-gradient(ellipse at 50% 100%, rgba(77,201,246,0.05) 0%, transparent 65%);
     }
-    .cta h2 { font-size: 32px; margin-bottom: 12px; }
-    .cta p { color: #8892b0; margin-bottom: 32px; }
+    .cta h2 { font-size: 30px; margin-bottom: 14px; }
+    .cta p { color: #6b7a96; margin-bottom: 36px; }
 
+    /* ========== FOOTER ========== */
     footer {
-      border-top: 1px solid rgba(255,255,255,0.06);
-      padding: 32px 40px; text-align: center;
-      color: #4a5370; font-size: 14px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      padding: 28px 32px; text-align: center;
+      color: #3d4968; font-size: 13px;
     }
+    footer p + p { margin-top: 6px; }
 
+    /* ========== ANIMATIONS ========== */
     @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
+      from { opacity: 0; transform: translateY(24px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    .animate { animation: fadeInUp .6s ease both; }
-    .d1 { animation-delay: 0s; } .d2 { animation-delay: .1s; } .d3 { animation-delay: .2s; } .d4 { animation-delay: .3s; }
+    .anim { animation: fadeInUp .7s ease both; }
+    .a1 { animation-delay: 0s; } .a2 { animation-delay: .12s; } .a3 { animation-delay: .24s; } .a4 { animation-delay: .36s; }
 
     @media (max-width: 768px) {
       nav { padding: 14px 20px; }
-      .nav-links { gap: 16px; }
-      .section { padding: 60px 20px; }
-      .hero { padding: 100px 16px 60px; }
+      .nav-links { gap: 18px; }
+      .section { padding: 56px 18px; }
+      .hero { padding: 110px 16px 56px; }
+      .stats-bar { gap: 28px; padding: 32px 16px; }
+      .stat-number { font-size: 28px; }
     }
   </style>
 </head>
 <body>
+
+  <!-- ========== NAV ========== -->
   <nav>
     <div class="logo">DJTK LIVE</div>
     <ul class="nav-links">
       <li><a href="#home">首页</a></li>
       <li><a href="#features">功能</a></li>
-      <li><a href="#streams">直播</a></li>
-      <li><a href="#contact">联系我们</a></li>
+      <li><a href="#scenes">场景</a></li>
+      <li><a href="#pricing">价格</a></li>
+      <li><a href="#contact">联系</a></li>
     </ul>
   </nav>
+
+  <!-- ========== HERO ========== -->
   <section class="hero" id="home">
-    <div class="live-pulse animate d1">
-      <span class="live-dot"></span>
-      <span class="live-text">LIVE · 正在直播中</span>
+    <div class="hero-tag anim a1">
+      <span class="dot"></span> 全新升级 · 支持多平台推流
     </div>
-    <div class="hero-badge animate d1">DJTK NETWORK</div>
-    <h1 class="animate d2">天空视角<br>实时直播</h1>
-    <p class="animate d3">
-      大疆TK直播网络 — 基于DJI无人机技术的实时视频传输平台，<br>为航拍、巡检、赛事直播提供稳定高清的空中画面。
+    <h1 class="anim a2">天空视角 · 实时直播</h1>
+    <p class="sub anim a3">
+      基于 DJI 无人机技术的直播推流平台。覆盖全球 200+ 国家/地区，低延迟高性能，让您的空中画面稳定触达每一个终端。
     </p>
-    <div class="btn-group animate d4">
-      <a href="#streams" class="btn btn-primary">📡 观看直播</a>
-      <a href="#contact" class="btn btn-outline">🤝 商务合作</a>
-    </div>
   </section>
+
+  <!-- ========== STATS BAR ========== -->
+  <div class="stats-bar">
+    <div class="stat-item anim a1">
+      <div class="stat-number">200+</div>
+      <div class="stat-label">覆盖国家/地区</div>
+    </div>
+    <div class="stat-item anim a2">
+      <div class="stat-number">4K</div>
+      <div class="stat-label">超清直播画质</div>
+    </div>
+    <div class="stat-item anim a3">
+      <div class="stat-number">99.99%</div>
+      <div class="stat-label">服务可用率</div>
+    </div>
+    <div class="stat-item anim a4">
+      <div class="stat-number">24/7</div>
+      <div class="stat-label">技术支持</div>
+    </div>
+  </div>
+
+  <!-- ========== WHY US ========== -->
   <section class="section" id="features">
-    <h2 class="section-title">为什么选择我们</h2>
-    <p class="section-sub">四大核心技术，保障每一次直播稳定流畅</p>
+    <p class="section-label anim a1">为什么选择 DJTK</p>
+    <h2 class="section-title anim a1">重新定义空中直播体验</h2>
+    <p class="section-sub anim a2">
+      我们深知无人机直播对网络环境的极致要求，为此构建了三大核心保障体系。
+    </p>
     <div class="features-grid">
-      <div class="feature-card">
-        <div class="feature-icon">🎯</div>
-        <h3>4K 超清画质</h3>
-        <p>支持最高4K分辨率实时传输，画面细节纤毫毕现，带来身临其境的空中视觉体验。</p>
+      <div class="feature-card anim a2">
+        <div class="feature-icon">📡</div>
+        <h3>超清实时传输</h3>
+        <p>支持最高 4K 分辨率实时推流，端到端延迟低于 200ms。自研传输协议保障画面流畅无卡顿，适合长时间直播场景。</p>
       </div>
-      <div class="feature-card">
-        <div class="feature-icon">⚡</div>
-        <h3>超低延迟</h3>
-        <p>端到端延迟低至200ms，配合自研传输协议，确保关键画面零等待送达。</p>
+      <div class="feature-card anim a3">
+        <div class="feature-icon">🌍</div>
+        <h3>全域覆盖推流</h3>
+        <p>多频段自适应传输技术，无论城市高楼还是偏远山区，都能保持稳定连接。全球部署边缘加速节点，保障跨国低延迟。</p>
       </div>
-      <div class="feature-card">
-        <div class="feature-icon">🛰️</div>
-        <h3>全场景覆盖</h3>
-        <p>城市、山区、海洋——多频段自适应传输，恶劣环境下依然稳定在线。</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">🔒</div>
-        <h3>安全加密</h3>
-        <p>端到端AES-256加密传输，直播流数据全程保护，杜绝泄露风险。</p>
+      <div class="feature-card anim a4">
+        <div class="feature-icon">🔐</div>
+        <h3>企业级安全保障</h3>
+        <p>端到端 AES-256 加密，支持 RTMP/RTSP/SRT 多协议接入。SLA 高达 99.99%，满足商业级可靠性与合规要求。</p>
       </div>
     </div>
   </section>
-  <section class="section" id="streams">
-    <h2 class="section-title">热门直播间</h2>
-    <p class="section-sub">实时空中直播，精彩不容错过</p>
-    <div class="streams-grid">
-      <div class="stream-card">
-        <div class="stream-thumb">
-          <span class="live-tag">LIVE</span>
-          <div class="play-icon">▶</div>
-        </div>
-        <div class="stream-info">
-          <h4>🏙️ 城市风光 · 上海陆家嘴</h4>
-          <span>👁 2.3k 观看 · 大疆 Air 3</span>
-        </div>
+
+  <!-- ========== SCENES ========== -->
+  <section class="section" id="scenes">
+    <p class="section-label anim a1">全场景覆盖</p>
+    <h2 class="section-title anim a1">赋能多场景无人机直播</h2>
+    <p class="section-sub anim a2">
+      无论您的业务是航拍直播、赛事转播还是工业巡检，DJTK 都能提供高效的实时推流支持。
+    </p>
+    <div class="scenes-grid">
+      <div class="scene-card anim a2">
+        <div class="scene-icon">🏙️</div>
+        <h4>城市航拍直播</h4>
+        <p>多机位协同推流，高清城市场景直播。支持实时切换视角，打造沉浸式观赏体验。</p>
       </div>
-      <div class="stream-card">
-        <div class="stream-thumb">
-          <span class="live-tag">LIVE</span>
-          <div class="play-icon">▶</div>
-        </div>
-        <div class="stream-info">
-          <h4>🏔️ 黄山日出 · 云海航拍</h4>
-          <span>👁 1.8k 观看 · 大疆 Mavic 3</span>
-        </div>
+      <div class="scene-card anim a3">
+        <div class="scene-icon">🏟️</div>
+        <h4>赛事活动转播</h4>
+        <p>低延迟高帧率，专为体育赛事、音乐节等大型活动打造。无人机空中跟拍，视角独一无二。</p>
       </div>
-      <div class="stream-card">
-        <div class="stream-thumb">
-          <span class="live-tag">LIVE</span>
-          <div class="play-icon">▶</div>
-        </div>
-        <div class="stream-info">
-          <h4>🏎️ F1赛道 · 无人机跟拍</h4>
-          <span>👁 5.6k 观看 · 大疆 FPV</span>
-        </div>
+      <div class="scene-card anim a4">
+        <div class="scene-icon">🏭</div>
+        <h4>工业巡检监控</h4>
+        <p>电力巡检、工地监控、桥梁检测——实时回传高清画面，结合AI分析，提升巡检效率与安全性。</p>
       </div>
     </div>
   </section>
+
+  <!-- ========== PRICING ========== -->
+  <section class="section" id="pricing">
+    <p class="section-label anim a1">灵活定价</p>
+    <h2 class="section-title anim a1">选择适合你的方案</h2>
+    <p class="section-sub anim a2">
+      无隐藏费用，按需付费，随时扩展。
+    </p>
+    <div class="pricing-grid">
+      <!-- 入门版 -->
+      <div class="price-card anim a2">
+        <div class="price-header">
+          <div class="name">入门版</div>
+          <div class="amount">¥30<small>/月</small></div>
+          <div class="desc">适合个人航拍爱好者</div>
+        </div>
+        <ul class="price-features">
+          <li>1 路直播推流</li>
+          <li>1080P 高清画质</li>
+          <li>不限流量</li>
+          <li>基础技术支持</li>
+        </ul>
+        <a href="#contact" class="btn btn-outline">选择方案</a>
+      </div>
+      <!-- 专业版 -->
+      <div class="price-card popular anim a3">
+        <div class="popular-tag">最受欢迎</div>
+        <div class="price-header">
+          <div class="name">专业版</div>
+          <div class="amount">¥90<small>/月</small></div>
+          <div class="desc">适合工作室多机位直播</div>
+        </div>
+        <ul class="price-features">
+          <li>3 路直播推流</li>
+          <li>4K 超清画质</li>
+          <li>不限流量</li>
+          <li>优先技术支持</li>
+          <li>多平台同步推流</li>
+        </ul>
+        <a href="#contact" class="btn btn-primary">立即开通</a>
+      </div>
+      <!-- 企业版 -->
+      <div class="price-card anim a4">
+        <div class="price-header">
+          <div class="name">企业版</div>
+          <div class="amount">¥?<small></small></div>
+          <div class="desc">适合大型活动与商业部署</div>
+        </div>
+        <ul class="price-features">
+          <li>不限推流路数</li>
+          <li>8K 超清画质</li>
+          <li>不限流量</li>
+          <li>专属客户经理</li>
+          <li>API 接口对接</li>
+          <li>定制化解决方案</li>
+        </ul>
+        <a href="#contact" class="btn btn-outline">联系销售</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== CTA ========== -->
   <section class="cta" id="contact">
-    <h2>准备好连接天空了吗？</h2>
-    <p>商务合作 / 媒体对接 / 技术咨询 — 欢迎联系我们</p>
-    <a href="mailto:contact@dajiangtk.xyz" class="btn btn-primary">📧 发送邮件</a>
+    <h2 class="anim a1">准备好连接天空了吗？</h2>
+    <p class="anim a2">商务合作 / 媒体对接 / 技术咨询 — 欢迎联系我们</p>
+    <a href="mailto:contact@dajiangtiktok.xyz" class="btn btn-primary anim a3" style="width: auto; padding-left: 40px; padding-right: 40px;">📧 发送邮件</a>
   </section>
+
+  <!-- ========== FOOTER ========== -->
   <footer>
-    <p>© 2026 大疆TK直播网络 DJTK Live Network · dajiangtk.xyz</p>
-    <p style="margin-top:6px;">Powered by DJI Technology · 天空视角 · 实时直播</p>
+    <p>© 2026 大疆TK直播网络 DJTK Live Network · dajiangtiktok.xyz</p>
+    <p>Powered by DJI Technology · 天空视角 · 实时直播</p>
   </footer>
+
 </body>
 </html>
