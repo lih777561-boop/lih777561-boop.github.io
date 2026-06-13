@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>大疆TK直播网络 — 天空视角·实时直播</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: #0a0e17;
+      color: #e0e6f0;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    a { color: #4dc9f6; text-decoration: none; }
+
+    nav {
+      position: fixed; top:0; left:0; right:0; z-index:999;
+      background: rgba(10,14,23,0.92);
+      backdrop-filter: blur(20px);
+      padding: 18px 40px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .logo {
+      font-size: 22px; font-weight: 800;
+      background: linear-gradient(135deg, #4dc9f6, #00b4d8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 2px;
+    }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a { color: #8892b0; transition: color .3s; font-size: 15px; }
+    .nav-links a:hover { color: #4dc9f6; }
+
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center;
+      padding: 120px 20px 80px;
+      position: relative;
+      background: radial-gradient(ellipse at 50% 0%, rgba(77,201,246,0.08) 0%, transparent 70%);
+    }
+    .hero::before {
+      content: ''; position: absolute; top:30%; left:50%; transform: translate(-50%,-50%);
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(77,201,246,0.06) 0%, transparent 70%);
+      border-radius: 50%; pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-block; padding: 8px 24px;
+      border: 1px solid rgba(77,201,246,0.3);
+      border-radius: 50px;
+      color: #4dc9f6; font-size: 14px; letter-spacing: 3px;
+      margin-bottom: 32px; animation: fadeInUp .6s ease;
+    }
+    .hero h1 {
+      font-size: clamp(36px, 6vw, 64px); font-weight: 800;
+      line-height: 1.2; margin-bottom: 20px;
+      background: linear-gradient(135deg, #e0e6f0 20%, #4dc9f6 80%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .hero p {
+      font-size: 18px; color: #8892b0; max-width: 540px; margin-bottom: 40px;
+    }
+    .btn-group { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+    .btn {
+      padding: 14px 36px; border-radius: 8px; font-size: 16px; font-weight: 600;
+      cursor: pointer; transition: all .3s; border: none; display: inline-block;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #4dc9f6, #0077b6);
+      color: #fff; box-shadow: 0 4px 24px rgba(77,201,246,0.25);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(77,201,246,0.4); }
+    .btn-outline {
+      background: transparent; color: #4dc9f6;
+      border: 1.5px solid rgba(77,201,246,0.4);
+    }
+    .btn-outline:hover { border-color: #4dc9f6; background: rgba(77,201,246,0.06); }
+
+    .live-pulse {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 20px; background: rgba(255,59,48,0.1);
+      border: 1px solid rgba(255,59,48,0.3); border-radius: 50px;
+      margin-bottom: 28px;
+    }
+    .live-dot {
+      width: 10px; height: 10px; background: #ff3b30; border-radius: 50%;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity:1; box-shadow: 0 0 0 0 rgba(255,59,48,0.6); }
+      50% { opacity:0.8; box-shadow: 0 0 0 10px rgba(255,59,48,0); }
+    }
+    .live-text { color: #ff3b30; font-weight: 700; font-size: 14px; letter-spacing: 1px; }
+
+    .section {
+      padding: 100px 40px; max-width: 1200px; margin: 0 auto;
+    }
+    .section-title {
+      text-align: center; font-size: 36px; font-weight: 700; margin-bottom: 16px;
+    }
+    .section-sub {
+      text-align: center; color: #8892b0; margin-bottom: 60px; font-size: 16px;
+    }
+    .features-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 28px;
+    }
+    .feature-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px; padding: 36px 28px;
+      transition: all .3s;
+    }
+    .feature-card:hover {
+      border-color: rgba(77,201,246,0.3);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(77,201,246,0.08);
+    }
+    .feature-icon { font-size: 40px; margin-bottom: 20px; }
+    .feature-card h3 { font-size: 20px; margin-bottom: 10px; }
+    .feature-card p { color: #8892b0; font-size: 14px; line-height: 1.7; }
+
+    .streams-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+    }
+    .stream-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px; overflow: hidden;
+      transition: all .3s;
+    }
+    .stream-card:hover { border-color: rgba(77,201,246,0.25); }
+    .stream-thumb {
+      height: 200px; background: linear-gradient(135deg, #1a1f2e, #0d1b2a);
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+    .stream-thumb .play-icon {
+      width: 56px; height: 56px; background: rgba(77,201,246,0.3);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 24px;
+    }
+    .stream-card .live-tag {
+      position: absolute; top:12px; left:12px;
+      background: #ff3b30; color:#fff; padding:3px 10px;
+      border-radius: 4px; font-size:12px; font-weight:700;
+    }
+    .stream-info { padding: 20px; }
+    .stream-info h4 { margin-bottom: 6px; }
+    .stream-info span { color: #8892b0; font-size: 13px; }
+
+    .cta {
+      text-align: center; padding: 100px 40px;
+      background: radial-gradient(ellipse at 50% 100%, rgba(77,201,246,0.06) 0%, transparent 70%);
+    }
+    .cta h2 { font-size: 32px; margin-bottom: 12px; }
+    .cta p { color: #8892b0; margin-bottom: 32px; }
+
+    footer {
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 32px 40px; text-align: center;
+      color: #4a5370; font-size: 14px;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate { animation: fadeInUp .6s ease both; }
+    .d1 { animation-delay: 0s; } .d2 { animation-delay: .1s; } .d3 { animation-delay: .2s; } .d4 { animation-delay: .3s; }
+
+    @media (max-width: 768px) {
+      nav { padding: 14px 20px; }
+      .nav-links { gap: 16px; }
+      .section { padding: 60px 20px; }
+      .hero { padding: 100px 16px 60px; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="logo">DJTK LIVE</div>
+    <ul class="nav-links">
+      <li><a href="#home">首页</a></li>
+      <li><a href="#features">功能</a></li>
+      <li><a href="#streams">直播</a></li>
+      <li><a href="#contact">联系我们</a></li>
+    </ul>
+  </nav>
+  <section class="hero" id="home">
+    <div class="live-pulse animate d1">
+      <span class="live-dot"></span>
+      <span class="live-text">LIVE · 正在直播中</span>
+    </div>
+    <div class="hero-badge animate d1">DJTK NETWORK</div>
+    <h1 class="animate d2">天空视角<br>实时直播</h1>
+    <p class="animate d3">
+      大疆TK直播网络 — 基于DJI无人机技术的实时视频传输平台，<br>为航拍、巡检、赛事直播提供稳定高清的空中画面。
+    </p>
+    <div class="btn-group animate d4">
+      <a href="#streams" class="btn btn-primary">📡 观看直播</a>
+      <a href="#contact" class="btn btn-outline">🤝 商务合作</a>
+    </div>
+  </section>
+  <section class="section" id="features">
+    <h2 class="section-title">为什么选择我们</h2>
+    <p class="section-sub">四大核心技术，保障每一次直播稳定流畅</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h3>4K 超清画质</h3>
+        <p>支持最高4K分辨率实时传输，画面细节纤毫毕现，带来身临其境的空中视觉体验。</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3>超低延迟</h3>
+        <p>端到端延迟低至200ms，配合自研传输协议，确保关键画面零等待送达。</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🛰️</div>
+        <h3>全场景覆盖</h3>
+        <p>城市、山区、海洋——多频段自适应传输，恶劣环境下依然稳定在线。</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <h3>安全加密</h3>
+        <p>端到端AES-256加密传输，直播流数据全程保护，杜绝泄露风险。</p>
+      </div>
+    </div>
+  </section>
+  <section class="section" id="streams">
+    <h2 class="section-title">热门直播间</h2>
+    <p class="section-sub">实时空中直播，精彩不容错过</p>
+    <div class="streams-grid">
+      <div class="stream-card">
+        <div class="stream-thumb">
+          <span class="live-tag">LIVE</span>
+          <div class="play-icon">▶</div>
+        </div>
+        <div class="stream-info">
+          <h4>🏙️ 城市风光 · 上海陆家嘴</h4>
+          <span>👁 2.3k 观看 · 大疆 Air 3</span>
+        </div>
+      </div>
+      <div class="stream-card">
+        <div class="stream-thumb">
+          <span class="live-tag">LIVE</span>
+          <div class="play-icon">▶</div>
+        </div>
+        <div class="stream-info">
+          <h4>🏔️ 黄山日出 · 云海航拍</h4>
+          <span>👁 1.8k 观看 · 大疆 Mavic 3</span>
+        </div>
+      </div>
+      <div class="stream-card">
+        <div class="stream-thumb">
+          <span class="live-tag">LIVE</span>
+          <div class="play-icon">▶</div>
+        </div>
+        <div class="stream-info">
+          <h4>🏎️ F1赛道 · 无人机跟拍</h4>
+          <span>👁 5.6k 观看 · 大疆 FPV</span>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="cta" id="contact">
+    <h2>准备好连接天空了吗？</h2>
+    <p>商务合作 / 媒体对接 / 技术咨询 — 欢迎联系我们</p>
+    <a href="mailto:contact@dajiangtk.xyz" class="btn btn-primary">📧 发送邮件</a>
+  </section>
+  <footer>
+    <p>© 2026 大疆TK直播网络 DJTK Live Network · dajiangtk.xyz</p>
+    <p style="margin-top:6px;">Powered by DJI Technology · 天空视角 · 实时直播</p>
+  </footer>
+</body>
+</html>
